@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&display=block');
+
+body{margin:0;padding:0;background:#ffe;font-size:14px;font-family:'Ma Shan Zheng','ZCOOL KuaiLe','Microsoft YaHei','PingFang SC','Hiragino Sans GB',cursive;color:#231F20;overflow:hidden;letter-spacing:0.3px}
+a {color:#000;font-size:14px;}
+#main{width:100%;height:100vh;}
+#main{position:relative;z-index:1;}
+#wrap{position:relative;margin:0 auto;width:100vw;height:100vh;overflow:hidden;}
+#text{width:560px;height:425px;left:200px;top:55px;position:absolute;}
+#code{display:none;font-size:22px;line-height:1.85;text-shadow:0 1px 1px rgba(255,255,255,0.35);font-family:'ZCOOL KuaiLe','Ma Shan Zheng','Microsoft YaHei','PingFang SC',cursive;}
+#clock-box {position:absolute;left:200px;top:525px;font-size:28px;display:none;}
+#clock-box a {font-size:28px;text-decoration:none;}
+#clock{margin-left:48px;}
+#clock .digit {font-size:64px;}
+#canvas{display:block;margin:0;width:100%;height:100%;position:absolute;left:0;top:0;z-index:1;}
+#text,#clock-box{z-index:3;}
+#light-reveal{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;opacity:0;background:linear-gradient(180deg, #fff9fc 0%, #ffe8f4 50%, #fff2f8 100%);clip-path:circle(0px at var(--reveal-x,50vw) var(--reveal-y,50vh));z-index:0;}
+#error{margin:0 auto;text-align:center;margin-top:60px;display:none;}
+.hand{cursor:pointer;}
+.say{margin-left:5px;}
+.space{margin-right:150px;}
+
+#code h1{
+	font-family:'Ma Shan Zheng','ZCOOL KuaiLe','Microsoft YaHei','PingFang SC',cursive;
+	font-size:32px;
+	font-weight:400;
+	letter-spacing:1px;
+	margin:0.2em 0;
+}
+
+body.theme-ready #light-reveal {
+	transition: clip-path 0.95s ease-out, opacity 0.35s ease;
+}
+
+body.reveal-light #light-reveal {
+	opacity: 1;
+	clip-path: circle(1400px at var(--reveal-x,50%) var(--reveal-y,50%));
+}
+
+body.cake-dark {
+	background: #17131f;
+	color: #ece7f7;
+}
+
+body.cake-dark #main {
+	background: #17131f;
+}
+
+body.cake-dark #wrap {
+	background: linear-gradient(180deg, #231b33 0%, #1a1427 100%);
+}
+
+body.cake-dark #canvas {
+	background: transparent;
+}
+
+/* Only the first page uses fully unified dark background to avoid split bars. */
+body.cake-dark.first-screen,
+body.cake-dark.first-screen #main,
+body.cake-dark.first-screen #wrap,
+body.cake-dark.first-screen #canvas {
+	background: linear-gradient(180deg, #071224 0%, #0d1a33 42%, #14182c 100%);
+}
+
+body.cake-dark.first-screen #wrap::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background-image:
+		radial-gradient(circle at 8% 16%, rgba(255,255,255,0.9) 0 1px, transparent 1.5px),
+		radial-gradient(circle at 18% 70%, rgba(214,234,255,0.75) 0 1.2px, transparent 1.7px),
+		radial-gradient(circle at 33% 28%, rgba(255,255,255,0.82) 0 1px, transparent 1.5px),
+		radial-gradient(circle at 47% 13%, rgba(226,243,255,0.68) 0 1.1px, transparent 1.7px),
+		radial-gradient(circle at 62% 58%, rgba(255,255,255,0.8) 0 1.2px, transparent 1.7px),
+		radial-gradient(circle at 74% 31%, rgba(220,236,255,0.75) 0 1px, transparent 1.6px),
+		radial-gradient(circle at 86% 18%, rgba(255,255,255,0.86) 0 1px, transparent 1.6px),
+		radial-gradient(circle at 91% 67%, rgba(220,236,255,0.72) 0 1.2px, transparent 1.8px),
+		radial-gradient(1200px 520px at 50% 115%, rgba(255, 175, 243, 0.08) 0%, rgba(255, 175, 243, 0) 70%);
+	opacity: 0.85;
+	z-index: 0;
+}
+
+body.cake-dark.first-screen #wrap::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background-image:
+		radial-gradient(circle at 12% 36%, rgba(255,255,255,0.95) 0 1.4px, transparent 2px),
+		radial-gradient(circle at 26% 18%, rgba(230,242,255,0.9) 0 1.1px, transparent 1.7px),
+		radial-gradient(circle at 41% 61%, rgba(255,255,255,0.92) 0 1.3px, transparent 1.9px),
+		radial-gradient(circle at 58% 22%, rgba(220,236,255,0.88) 0 1.2px, transparent 1.8px),
+		radial-gradient(circle at 71% 45%, rgba(255,255,255,0.9) 0 1.35px, transparent 2px),
+		radial-gradient(circle at 84% 28%, rgba(224,238,255,0.88) 0 1.2px, transparent 1.8px),
+		radial-gradient(circle at 93% 52%, rgba(255,255,255,0.9) 0 1.25px, transparent 1.9px);
+	opacity: 0.55;
+	mix-blend-mode: screen;
+	animation: starTwinkleSlow 6.8s ease-in-out infinite alternate;
+	z-index: 0;
+}
+
+@keyframes starTwinkleSlow {
+	0% {
+		opacity: 0.42;
+		filter: brightness(0.95);
+	}
+	50% {
+		opacity: 0.65;
+		filter: brightness(1.12);
+	}
+	100% {
+		opacity: 0.5;
+		filter: brightness(1.02);
+	}
+}
+
+body.cake-dark #text {
+	opacity: 0.95;
+}
+
+body.cake-light {
+	background: linear-gradient(180deg, #fffbfe 0%, #fff2f8 52%, #ffeef6 100%);
+	color: #231F20;
+}
+
+body.cake-light #main {
+	background: linear-gradient(180deg, #fffbfe 0%, #fff2f8 52%, #ffeef6 100%);
+}
+
+/* Visible full-width cloud band, restricted above the text area top line. */
+body.cake-light #main::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 2px;
+	width: 100%;
+	height: 52px;
+	pointer-events: none;
+	background-image:
+		radial-gradient(96px 28px at 8% 88%, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0) 72%),
+		radial-gradient(120px 34px at 15% 80%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0) 72%),
+		radial-gradient(90px 26px at 23% 90%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0) 72%),
+		radial-gradient(112px 32px at 37% 84%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0) 72%),
+		radial-gradient(86px 24px at 44% 92%, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0) 72%),
+		radial-gradient(118px 34px at 59% 82%, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0) 72%),
+		radial-gradient(94px 26px at 67% 90%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0) 72%),
+		radial-gradient(124px 36px at 80% 84%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0) 72%),
+		radial-gradient(92px 26px at 89% 90%, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0) 72%);
+	opacity: 1;
+	filter: blur(0.12px);
+	animation: cloudBandDrift 20s linear infinite;
+	will-change: transform;
+	z-index: 2;
+}
+
+@keyframes cloudBandDrift {
+	0% {
+		transform: translateX(-4%);
+	}
+	50% {
+		transform: translateX(3%);
+	}
+	100% {
+		transform: translateX(-4%);
+	}
+}
+
+body.cake-light #wrap {
+	background:
+		linear-gradient(180deg, rgba(255, 251, 254, 0.96) 0%, rgba(255, 242, 248, 0.92) 52%, rgba(255, 238, 247, 0.94) 100%);
+}
+
+body.cake-light #canvas {
+	background: transparent;
+}
+
+body.cake-light #wrap::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background-image:
+		linear-gradient(180deg, rgba(214, 238, 255, 0.7) 0%, rgba(232, 246, 255, 0.52) 28%, rgba(255, 248, 252, 0) 56%),
+		radial-gradient(760px 210px at 20% 88%, rgba(255, 212, 230, 0.15) 0%, rgba(255, 212, 230, 0) 72%),
+		radial-gradient(680px 200px at 80% 92%, rgba(255, 222, 237, 0.14) 0%, rgba(255, 222, 237, 0) 74%),
+		radial-gradient(620px 170px at 50% 76%, rgba(255, 233, 245, 0.24) 0%, rgba(255, 233, 245, 0) 74%),
+		radial-gradient(860px 260px at 50% 103%, rgba(255, 238, 247, 0.24) 0%, rgba(255, 238, 247, 0) 76%);
+	opacity: 0.62;
+	z-index: 0;
+}
+
+body.cake-light #wrap::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background-image:
+		linear-gradient(180deg, rgba(255,255,255,0) 58%, rgba(246, 235, 244, 0.11) 74%, rgba(246, 232, 240, 0.18) 100%),
+		radial-gradient(200px 64px at 8% 79%, rgba(174, 136, 153, 0.12) 0%, rgba(174, 136, 153, 0) 72%),
+		radial-gradient(250px 80px at 24% 77%, rgba(167, 131, 148, 0.13) 0%, rgba(167, 131, 148, 0) 72%),
+		radial-gradient(230px 72px at 42% 80%, rgba(178, 141, 158, 0.12) 0%, rgba(178, 141, 158, 0) 72%),
+		radial-gradient(260px 84px at 61% 78%, rgba(161, 129, 146, 0.14) 0%, rgba(161, 129, 146, 0) 72%),
+		radial-gradient(220px 68px at 78% 80%, rgba(173, 138, 154, 0.12) 0%, rgba(173, 138, 154, 0) 72%),
+		radial-gradient(190px 60px at 93% 77%, rgba(164, 132, 146, 0.11) 0%, rgba(164, 132, 146, 0) 72%);
+	opacity: 0.55;
+	filter: blur(0.35px);
+	z-index: 0;
+}
+
+/* When already in bright theme, keep the reveal mask fully expanded but invisible,
+   so it will not shrink back and cause any second dark-to-light flash. */
+body.cake-light #light-reveal {
+	opacity: 0;
+	clip-path: circle(1400px at var(--reveal-x,50vw) var(--reveal-y,50vh));
+}

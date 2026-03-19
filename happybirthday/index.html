@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "htt`://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>瑜，生日快乐！</title>     
+    <link type="text/css" rel="stylesheet" href="./css/default.css">
+    <script type="text/javascript" src="./css/jquery.min.js"></script>
+    <script type="text/javascript" src="./css/jscex.min.js"></script>
+    <script type="text/javascript" src="./css/jscex-parser.js"></script>
+    <script type="text/javascript" src="./css/jscex-jit.js"></script>
+    <script type="text/javascript" src="./css/jscex-builderbase.min.js"></script>
+    <script type="text/javascript" src="./css/jscex-async.min.js"></script>
+    <script type="text/javascript" src="./css/jscex-async-powerpack.min.js"></script>
+    <script type="text/javascript" src="./css/functions.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./css/love.js" charset="utf-8"></script>
+      <style type="text/css">
+<!--
+.STYLE1 {color: #666666}
+-->
+        </style>
+</head>
+    <body class="cake-dark">
+      <audio autoplay="autopaly">
+          <source src="music/love.mp3" type="audio/mp3" />
+      </audio>  
+        <div id="main">
+             <div id="wrap">
+                <div id="text">
+              <div id="code">
+            <font color="#FF5A9E">    
+        <span class="say"><h1>生日快乐，梓瑜姐。</h1></span><br><br>
+        <span class="say">愿你是公主，被世界温柔以待，</span><br><br>
+        <span class="say">把回忆的城堡建在喜欢里。</span><br><br>
+        <span class="say">愿你是勇者，拥抱热爱与远方，</span><br><br>
+        <span class="say">为吟游者书写新的篇章。</span><br><br>
+        <span class="say">今天属于你。</span><br><br>
+        <span class="say"><h1>愿你岁岁欢愉，年年胜意。</h1></span><br>
+        </font>
+      </div>
+                </div>
+                <div id="clock-box">
+                    <!-- <span class="STYLE1"></span><font color="#33CC00">距离我喜欢你，</font>
+<span class="STYLE1">已经是……</span> -->
+<span class="STYLE1"></span>
+<font color="#33CC00"></font>
+<span class="STYLE1"></span>
+                  <!-- <div id="clock"></div> -->
+              </div>
+                <canvas id="canvas" width="1100" height="680"></canvas>
+                                <div id="light-reveal"></div>
+            </div>
+            
+        </div>
+    
+    <script>
+    </script>
+
+    <script>
+    (function(){
+        var canvas = $('#canvas');
+        var pageBody = $('body');
+        var wrap = $('#wrap');
+    
+        if (!canvas[0].getContext) {
+            $("#error").show();
+            return false;        }
+
+        var width = wrap.width();
+        var height = wrap.height();
+        if (!width || !height) {
+            width = window.innerWidth || 1100;
+            height = window.innerHeight || 680;
+        }
+        canvas.attr("width", width);
+        canvas.attr("height", height);
+        canvas.css("background", "none");
+
+        var BASE_WIDTH = 1100;
+        var BASE_HEIGHT = 680;
+        var sx = width / BASE_WIDTH;
+        var sy = height / BASE_HEIGHT;
+        var sr = (sx + sy) / 2;
+
+        function scaleBranchList(list) {
+            var scaled = [];
+            for (var i = 0; i < list.length; i++) {
+                var node = list[i];
+                var children = node[8] && node[8].length ? scaleBranchList(node[8]) : [];
+                scaled.push([
+                    node[0] * sx,
+                    node[1] * sy,
+                    node[2] * sx,
+                    node[3] * sy,
+                    node[4] * sx,
+                    node[5] * sy,
+                    Math.max(1, node[6] * sr),
+                    node[7],
+                    children
+                ]);
+            }
+            return scaled;
+        }
+
+        var baseBranch = [
+            [525, 680, 565, 255, 545, 190, 36, 100, [
+                [540, 500, 455, 417, 340, 400, 15, 100, [
+                    [450, 435, 434, 430, 394, 395, 2, 40]
+                ]],
+                [556, 448, 622, 346, 724, 334, 14, 100, [
+                    [590, 404, 666, 412, 686, 432, 3, 80]
+                ]],
+                [539, 281, 537, 248, 534, 217, 3, 40],
+                [546, 397, 413, 247, 328, 244, 11, 80, [
+                    [427, 286, 383, 253, 371, 205, 2, 40],
+                    [498, 345, 435, 315, 395, 330, 4, 60]
+                ]],
+                [546, 357, 608, 252, 678, 221, 8, 100, [
+                    [590, 293, 646, 277, 648, 271, 2, 80]
+                ]]
+            ]]
+        ];
+
+        var opts = {
+            seed: {
+                x: width / 2 - 20 * sx,
+                color: "rgb(190, 26, 37)",
+                scale: 2
+            },
+            branch: scaleBranchList(baseBranch),
+            bloom: {
+                num: 980,
+                width: width,
+                height: height,
+            },
+            footer: {
+                width: Math.ceil(width * 1.08),
+                height: 5,
+                speed: 10,
+            }
+        }
+
+        var tree = new Tree(canvas[0], width, height, opts);
+        var seed = tree.seed;
+        var foot = tree.footer;
+        var hold = 1;
+        pageBody.removeClass('cake-light').addClass('cake-dark first-screen');
+
+        function startLightRevealFromCake() {
+            var cx = seed.heart.point.x;
+            var cy = seed.heart.point.y;
+            var wrapOffset = wrap.offset();
+            var vx = wrapOffset.left + cx;
+            var vy = wrapOffset.top + cy;
+            pageBody.css('--reveal-x', vx + 'px');
+            pageBody.css('--reveal-y', vy + 'px');
+            pageBody.addClass('theme-ready reveal-light');
+
+            // Switch underlying theme after the reveal has expanded.
+            setTimeout(function () {
+                pageBody.removeClass('cake-dark first-screen').addClass('cake-light');
+
+                // Fade out reveal mask only after bright theme is already in place.
+                setTimeout(function () {
+                    pageBody.removeClass('reveal-light theme-ready');
+                }, 120);
+            }, 980);
+        }
+        var girlImage = new Image();
+        var girlLoaded = false;
+        var girlCutoutCanvas = null;
+        var girlCutoutReady = false;
+        girlImage.onload = function () {
+            girlLoaded = true;
+            buildGirlCutout();
+        };
+        girlImage.src = "./images/girl.png";
+
+        function buildGirlCutout() {
+            if (!girlImage.naturalWidth || !girlImage.naturalHeight) {
+                return;
+            }
+
+            var off = document.createElement('canvas');
+            off.width = girlImage.naturalWidth;
+            off.height = girlImage.naturalHeight;
+            var offCtx = off.getContext('2d');
+            offCtx.drawImage(girlImage, 0, 0);
+
+            var imageData = offCtx.getImageData(0, 0, off.width, off.height);
+            var data = imageData.data;
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i];
+                var g = data[i + 1];
+                var b = data[i + 2];
+                var a = data[i + 3];
+                if (a === 0) {
+                    continue;
+                }
+
+                var max = Math.max(r, g, b);
+                var min = Math.min(r, g, b);
+                var sat = max - min;
+                var luma = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                // Remove bright, low-saturation backdrop from generated portrait images.
+                if (luma > 220 && sat < 30) {
+                    data[i + 3] = 0;
+                } else if (luma > 195 && sat < 40) {
+                    data[i + 3] = Math.floor(a * 0.3);
+                }
+            }
+
+            offCtx.putImageData(imageData, 0, 0);
+            girlCutoutCanvas = off;
+            girlCutoutReady = true;
+        }
+
+        function drawGirlLayer(opacity, nowMs) {
+            if (!girlLoaded) {
+                return;
+            }
+            var imgW = 240;
+            var imgH = 360;
+            var x = width * 0.71;
+            var y = height - imgH - 2;
+            var t = nowMs || Date.now();
+            var breathe = Math.sin(t / 900) * 1.6;
+            var sway = Math.sin(t / 1300) * 1.4;
+            var tilt = -0.02 + Math.sin(t / 1500) * 0.012;
+
+            var ctx = tree.ctx;
+            ctx.save();
+            var finalOpacity = typeof opacity === 'number' ? opacity : 1;
+            ctx.globalAlpha = Math.min(1, finalOpacity + 0.06);
+
+            ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+            ctx.shadowBlur = 0;
+            ctx.translate(x + imgW * 0.52 + sway, y + imgH * 0.58 + breathe);
+            ctx.rotate(tilt);
+            ctx.filter = 'brightness(1.16) saturate(1.08)';
+            ctx.drawImage(girlCutoutReady ? girlCutoutCanvas : girlImage, -imgW * 0.52, -imgH * 0.58, imgW, imgH);
+
+            ctx.restore();
+        }
+
+        canvas.click(function(e) {
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            if (seed.hover(x, y)) {
+                hold = 0; 
+                seed.ignite();
+                // Let the candle flame flicker briefly before switching theme.
+                setTimeout(function () {
+                    startLightRevealFromCake();
+                }, 1000);
+                canvas.unbind("click");
+                canvas.unbind("mousemove");
+                canvas.removeClass('hand');
+            }
+        }).mousemove(function(e){
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            canvas.toggleClass('hand', seed.hover(x, y));
+        });
+
+        var seedAnimate = eval(Jscex.compile("async", function () {
+            seed.draw();
+            while (hold) {
+                seed.clear();
+                seed.draw();
+                $await(Jscex.Async.sleep(40));
+            }
+
+            // Play a short ignition burst, then transition to the next stage.
+            for (var i = 0; i < 14; i++) {
+                seed.clear();
+                seed.draw();
+                $await(Jscex.Async.sleep(60));
+            }
+
+            while (seed.canScale()) {
+                seed.scale(0.95);
+                $await(Jscex.Async.sleep(18));
+            }
+            while (seed.canMove()) {
+                seed.move(0, 3);
+                foot.draw();
+                $await(Jscex.Async.sleep(18));
+            }
+        }));
+
+        var growAnimate = eval(Jscex.compile("async", function () {
+            do {
+              tree.grow();
+                $await(Jscex.Async.sleep(10));
+            } while (tree.canGrow());
+        }));
+
+        var flowAnimate = eval(Jscex.compile("async", function () {
+            do {
+                            tree.flower(3);
+                $await(Jscex.Async.sleep(10));
+            } while (tree.canFlower());
+        }));
+
+        var moveAnimate = eval(Jscex.compile("async", function () {
+            var snapX1 = Math.round(240 * sx);
+            var snapX2 = Math.round(500 * sx);
+            var snapW = Math.round(610 * sx);
+            tree.snapshot("p1", snapX1, 0, snapW, height);
+            while (tree.move("p1", snapX2, 0)) {
+                foot.draw();
+                $await(Jscex.Async.sleep(10));
+            }
+            foot.draw();
+            tree.snapshot("p2", snapX2, 0, snapW, height);
+
+            // Keep drawing only on canvas to avoid fixed snapshot artifacts.
+            canvas.parent().css("background", "none");
+            canvas.css("background", "none");
+            $await(Jscex.Async.sleep(180));
+        }));
+
+        var jumpAnimate = eval(Jscex.compile("async", function () {
+            var ctx = tree.ctx;
+            while (true) {
+                tree.ctx.clearRect(0, 0, width, height);
+                tree.draw("p2");
+                drawGirlLayer(0.95, Date.now());
+                tree.jump();
+                foot.draw();
+
+                $await(Jscex.Async.sleep(36));
+            }
+        }));
+
+        var textAnimate = eval(Jscex.compile("async", function () {
+        var together = new Date();
+        together.setFullYear(2009,10,23 );      //时间年月日
+        together.setHours(16);            //小时  
+        together.setMinutes(53);          //分钟
+        together.setSeconds(0);         //秒前一位
+        together.setMilliseconds(2);        //秒第二位
+
+        $("#code").show().typewriter();
+            $("#clock-box").fadeIn(500);
+            while (true) {
+                timeElapse(together);
+                $await(Jscex.Async.sleep(1000));
+            }
+        }));
+
+        var runAsync = eval(Jscex.compile("async", function () {
+            $await(seedAnimate());
+            $await(growAnimate());
+            $await(flowAnimate());
+            $await(moveAnimate());
+
+            textAnimate().start();
+
+            $await(jumpAnimate());
+        }));
+
+        runAsync().start();
+    })();
+    </script>
+
+    </body></html>
